@@ -464,7 +464,8 @@ The simulation generator takes two input files.  The first is the simulation con
 
 The configuration file is a standard configuration file describing the simulation parameters.  The only difference is values that will be replaced in the file are specified with a special qualifier.  The format of the qualifier is: \texttt{\%($<$name$>$)s}, where \texttt{name} is a unique name that corresponds to the name given in the generator configuration file.  
 
-The simulation configuration file consists of key/value pairs describing how each variable should be replaced in the simulation configuration.  The keys correspond to the \texttt{name} given in the simulation configuration file.  The values are explicitly formatted to define the range of values that the variables are to be set in the generated simulation files.  Example values are shown in Figure \ref{fig:simgenexample}.
+The simulation configuration file consists of key/value pairs describing how each variable should be replaced in the simulation configuration.  The keys correspond to the \texttt{name} given in the simulation configuration file.  The values are explicitly formatted to define the range of values that the variables are to be set in the generated simulation files.  
+
 
 \begin{figure}[ht]
 \lstset{ frame=single}
@@ -477,7 +478,14 @@ repeat_param = [1..10] step 4 repeat 10
 \label{fig:simgenexample}
 \end{figure}
 
+Example values are shown in Figure \ref{fig:simgenexample}.  In this example, there is a parameter, \texttt{param}, that iterates from $1.0$ to $2.0$, stepping every 1.  In the generated simulation files, \texttt{\%$<$param$>$)} will be replaced with 1.0, and in another simulation file it will be 2.0.
 
+The next parameter in the example Figure \ref{fig:simgenexample} is called \texttt{repeat\_param}.  This parameter has an optional argument after the definition of the range, \texttt{repeat 10}.  This additional argument means that for each possible value of \texttt{repeat\_param}, it should be repeated 10 times.  For example, the first possible value will be 1.  The value of 1 will be in the next 10 simulation files as well.  The next value of \texttt{repeat\_param} will be 5, and it will also be repeated for 10 simulation files.  The next value is 9, repeated 10 times.  Then it rolls over back to 1, repeated 10 times ...
+
+\subsection{Remote Execution}
+
+
+% Independent variables
 
 
 \section{Evaluation}
