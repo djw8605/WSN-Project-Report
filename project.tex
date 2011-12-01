@@ -127,7 +127,7 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+   \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
   % \graphicspath{{../pdf/}{../jpeg/}}
   % and their extensions so you won't have to specify these with
@@ -405,7 +405,8 @@ uam111@gmail.com}
 
 \begin{abstract}
 %\boldmath
-The abstract goes here.
+The 
+
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -440,15 +441,31 @@ IEEEtran.cls version 1.7 and later.
 % (should never be an issue)
 I wish you the best of success.
 
-\hfill mds
- 
-\hfill January 11, 2007
-
-\subsection{Subsection Heading Here}
-Subsection text here.
 
 
-\subsubsection{Subsubsection Heading Here}
+\section{Implementation}
+In order to run multiple simulations, a simulation generator was developed.  The simulation generator creates the simulation configuration for a NS-2 simulation.  Figure \ref{fig:processoverview} shows the workflow that a simulation.  First the user creates a simulation configuration file specifying the parameters for the simulation.  In NS-2, this includes the node configuration and the simulation timeline.  Next the user creates a generator configuration file.  This file specifies the variables and their possible ranges for the simulations.  The user then invokes the generator which will create individual simulation configurations and the job submission files that will be used to execute the simulations.  The job submission files are then submitted to a resource management system which will manage the execution of the simulations.
+
+The resource management system, in this case Condor \cite{litzkow1988condor}, will deploy the jobs on computational clusters across the Open Science Grid \cite{pordes2007open}, a US national cyberinfrastructure.  After the jobs have completed, the output will be transferred back and can be post processed further.
+
+Our implementation will focus on the generation of the simulation files and execution of the simulations.  The post processing is left as future work.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=6in]{images/ProcessOverview}
+\caption{Overview of Simulation Processing}
+\label{fig:processoverview}
+\end{figure*}
+
+\subsection{Simulation Generator}
+The simulation generator takes two input files.  The first is the simulation configuration file, and the second is the Generator Configuration file, a file describing the range of values that simulation values should take.
+
+The configuration file is a standard configuration file describing the simulation parameters.  The only difference is values that will be replaced in the file are specified with a special qualifier.  The format of the qualifier is: \texttt{\%($<$name$>$)s}, where \texttt{name} is a unique name that corresponds to the name given in the simgen file.  
+
+
+
+
+\section{Evaluation}
 Subsubsection text here.
 
 
@@ -570,20 +587,13 @@ The authors would like to thank...
 % http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
+\bibliography{project}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
 
 
 
