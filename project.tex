@@ -347,6 +347,8 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+\usepackage{listings}
+\usepackage{color}
 
 \begin{document}
 %
@@ -460,7 +462,20 @@ Our implementation will focus on the generation of the simulation files and exec
 \subsection{Simulation Generator}
 The simulation generator takes two input files.  The first is the simulation configuration file, and the second is the Generator Configuration file, a file describing the range of values that simulation values should take.
 
-The configuration file is a standard configuration file describing the simulation parameters.  The only difference is values that will be replaced in the file are specified with a special qualifier.  The format of the qualifier is: \texttt{\%($<$name$>$)s}, where \texttt{name} is a unique name that corresponds to the name given in the simgen file.  
+The configuration file is a standard configuration file describing the simulation parameters.  The only difference is values that will be replaced in the file are specified with a special qualifier.  The format of the qualifier is: \texttt{\%($<$name$>$)s}, where \texttt{name} is a unique name that corresponds to the name given in the generator configuration file.  
+
+The simulation configuration file consists of key/value pairs describing how each variable should be replaced in the simulation configuration.  The keys correspond to the \texttt{name} given in the simulation configuration file.  The values are explicitly formatted to define the range of values that the variables are to be set in the generated simulation files.  Example values are shown in Figure \ref{fig:simgenexample}.
+
+\begin{figure}[ht]
+\lstset{ frame=single}
+\begin{lstlisting}
+[main]
+param = [1.0..2.0] step 1
+repeat_param = [1..10] step 4 repeat 10
+\end{lstlisting}
+\caption{Example generator configuration file}
+\label{fig:simgenexample}
+\end{figure}
 
 
 
