@@ -354,7 +354,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Distributed Wireless Sensor Network Simulator}
+\title{DWSim: Distributed Wireless Sensor Network Simulator}
 
 
 % author names and affiliations
@@ -483,9 +483,9 @@ Example values are shown in Figure \ref{fig:simgenexample}.  In this example, th
 The next parameter in the example Figure \ref{fig:simgenexample} is called \texttt{repeat\_param}.  This parameter has an optional argument after the definition of the range, \texttt{repeat 10}.  This additional argument means that for each possible value of \texttt{repeat\_param}, it should be repeated 10 times.  For example, the first possible value will be 1.  The value of 1 will be in the next 10 simulation files as well.  The next value of \texttt{repeat\_param} will be 5, and it will also be repeated for 10 simulation files.  The next value is 9, repeated 10 times.  Then it rolls over back to 1, repeated 10 times ...
 
 \subsection{Remote Execution}
-Remote execution is managed by the High Throughput resource management system Condor.  The generator creates a Condor submission file that is used to describe the job.  A submission script example is shown in Figure \ref{fig:condorsubmission}.  The submission script describes the job with lines such as which \texttt{executable} to run on the remote host, and \texttt{transfer\_input\_files} specifies what input files to transfer to the remote host before starting the \texttt{executable}.  The \texttt{output} and \texttt{error} are files that have the stdout and stderr (respectively) of the executable.
+Remote execution is managed by the High Throughput resource management system Condor.  The generator creates a Condor submission file that is used to describe the job.  A submission script example is shown in Figure \ref{fig:condorsubmission}.  The submission script describes the job with lines such as which \texttt{executable} to run on the remote host, and \texttt{transfer\_input\_files} specifies what input files to transfer to the remote host before starting the \texttt{executable}.  The \texttt{output} and \texttt{error} specify files that have the stdout and stderr (respectively) of the executable.
 
-\begin{figure}
+\begin{figure} [ht]
 \lstset{ frame=single,
 breaklines=true,                % sets automatic line breaking
 breakatwhitespace=true }
@@ -507,7 +507,9 @@ queue
 \label{fig:condorsubmission}
 \end{figure}
 
+When the job is submitted to Condor, it will manage the execution of the job until completion.  First it will send a request to the central manager for nodes to run on.  After receiving confirmation of a available node, it will contact the worker node and begin transferring files.  The transferred files are those specified by the \texttt{transfer_input_files}, plus the executable.  Once the transfers are completed, Condor will begin the executable.  
 
+The executable is custom for our project, and is distributed with the source.  It will first uncompress the NS-2 simulator, then execute the simulation using the simulation configuration that was given to the the executable as the \texttt{arguments}.
 
 
 % Independent variables
