@@ -446,7 +446,7 @@ I wish you the best of success.
 
 
 \section{Implementation}
-In order to run multiple simulations, a simulation generator was developed.  The simulation generator creates the simulation configuration for a NS-2 simulation.  Figure \ref{fig:processoverview} shows the workflow that a simulation.  First the user creates a simulation configuration file specifying the parameters for the simulation.  In NS-2, this includes the node configuration and the simulation timeline.  Next the user creates a generator configuration file.  This file specifies the variables and their possible ranges for the simulations.  The user then invokes the generator which will create individual simulation configurations and the job submission files that will be used to execute the simulations.  The job submission files are then submitted to a resource management system which will manage the execution of the simulations.
+In order to run multiple simulations, a simulation generator was developed\footnote{Source available at: https://github.com/djw8605/WSNSim}.  The simulation generator creates the simulation configuration for a NS-2 simulation.  Figure \ref{fig:processoverview} shows the workflow that a simulation.  First the user creates a simulation configuration file specifying the parameters for the simulation.  In NS-2, this includes the node configuration and the simulation timeline.  Next the user creates a generator configuration file.  This file specifies the variables and their possible ranges for the simulations.  The user then invokes the generator which will create individual simulation configurations and the job submission files that will be used to execute the simulations.  The job submission files are then submitted to a resource management system which will manage the execution of the simulations.
 
 The resource management system, in this case Condor \cite{litzkow1988condor}, will deploy the jobs on computational clusters across the Open Science Grid \cite{pordes2007open}, a US national cyberinfrastructure.  After the jobs have completed, the output will be transferred back and can be post processed further.
 
@@ -459,7 +459,8 @@ Our implementation will focus on the generation of the simulation files and exec
 \label{fig:processoverview}
 \end{figure*}
 
-\subsection{Simulation Generator}
+\subsection{Job Generation}
+\label{sec:jobgeneration}
 The simulation generator takes two input files.  The first is the simulation configuration file, and the second is the Generator Configuration file, a file describing the range of values that simulation values should take.
 
 The configuration file is a standard configuration file describing the simulation parameters.  The only difference is values that will be replaced in the file are specified with a special qualifier.  The format of the qualifier is: \texttt{\%($<$name$>$)s}, where \texttt{name} is a unique name that corresponds to the name given in the generator configuration file.  
@@ -482,8 +483,8 @@ Example values are shown in Figure \ref{fig:simgenexample}.  In this example, th
 
 The next parameter in the example Figure \ref{fig:simgenexample} is called \texttt{repeat\_param}.  This parameter has an optional argument after the definition of the range, \texttt{repeat 10}.  This additional argument means that for each possible value of \texttt{repeat\_param}, it should be repeated 10 times.  For example, the first possible value will be 1.  The value of 1 will be in the next 10 simulation files as well.  The next value of \texttt{repeat\_param} will be 5, and it will also be repeated for 10 simulation files.  The next value is 9, repeated 10 times.  Then it rolls over back to 1, repeated 10 times ...
 
-\subsection{Remote Execution}
-Remote execution is managed by the High Throughput resource management system Condor.  The generator creates a Condor submission file that is used to describe the job.  A submission script example is shown in Figure \ref{fig:condorsubmission}.  The submission script describes the job with lines such as which \texttt{executable} to run on the remote host, and \texttt{transfer\_input\_files} specifies what input files to transfer to the remote host before starting the \texttt{executable}.  The \texttt{output} and \texttt{error} specify files that have the stdout and stderr (respectively) of the executable.
+\subsection{Processing}
+Remote execution of the simulator is managed by the high throughput resource management system Condor.  The generator creates a Condor submission file that is used to describe the job.  A submission script example is shown in Figure \ref{fig:condorsubmission}.  The submission script describes the job with lines such as which \texttt{executable} to run on the remote host, and \texttt{transfer\_input\_files} specifies what input files to transfer to the remote host before starting the \texttt{executable}.  The \texttt{output} and \texttt{error} specify files that have the stdout and stderr (respectively) of the executable.
 
 \begin{figure} [ht]
 \lstset{ frame=single,
@@ -491,33 +492,78 @@ breaklines=true,                % sets automatic line breaking
 breakatwhitespace=true }
 \begin{lstlisting}
 should_transfer_files = YES
-executable = submission.sh
-transfer_input_files = \
-   output2/submit0.simconfig, \
-   simulator.tar.gz
+executable = share/submission.sh
+transfer_input_files = tcl8.4.11.tar.gz,\
+   ns, \ 
+   output3/submit0.simconfig
 log = condor.log
 when_to_transfer_output = ON_EXIT
 universe = vanilla
-arguments = output2/submit0.simconfig
-error = output2/submit0.simconfig.err
-output = output2/submit0.simconfig.out
+arguments = output3/submit0.simconfig
+error = output3/submit0.simconfig.err
+output = output3/submit0.simconfig.out
 queue
 \end{lstlisting}
 \caption{Example submission file generated by }
 \label{fig:condorsubmission}
 \end{figure}
 
-When the job is submitted to Condor, it will manage the execution of the job until completion.  First it will send a request to the central manager for nodes to run on.  After receiving confirmation of a available node, it will contact the worker node and begin transferring files.  The transferred files are those specified by the \texttt{transfer_input_files}, plus the executable.  Once the transfers are completed, Condor will begin the executable.  
+When the job is submitted to Condor, it will manage the execution of the job until completion.  First it will send a request to the central manager for nodes to run on.  After receiving confirmation of a available node, it will contact the worker node and begin transferring files.  The transferred files are those specified by the \texttt{transfer\_input\_files}, plus the executable.  Once the transfers are completed, Condor will begin the executable.  
 
-The executable is custom for our project, and is distributed with the source.  It will first uncompress the NS-2 simulator, then execute the simulation using the simulation configuration that was given to the the executable as the \texttt{arguments}.
+The executable is a custom shell script distributed with our project.  It will first uncompress the NS-2 simulator and the tcl version that NS depends on.  The script will execute the simulation using the simulation configuration that was given to the the executable as the \texttt{arguments}.
 
 
 % Independent variables
 
 
 \section{Evaluation}
-Subsubsection text here.
 
+% TODO: talk about the simulation.
+For our evaluation of the design we choose a WSN modified example 
+
+\subsection{Experimental Design}
+The modified simulation file had 4 variables that where replaced using the simulation generator.  The variables in the NS-2 configuration where specified with the special qualifier specified in the Section \label{sec:jobgeneration}.  A snippet of the NS-2 configuration file showing two of the variables replaces is shown in Figure \ref{fig:ns2experimentconf}.
+
+\begin{figure}[ht]
+\lstset{ frame=single,
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=true }
+\begin{lstlisting}
+set udp0 [new Agent/UDP]
+#udp is the link protocol
+$ns attach-agent $n(0) $udp0
+set cbr0 [new Application/Traffic/Exponential]
+#cbr is the traffic generator
+
+#set the size of the packet
+$cbr0 set packetSize_ %(packetsize05)i
+#set the interval after which the packet is sent
+$cbr0 set interval_ %(interval05)lf
+\end{lstlisting}
+\caption{NS-2 Simulation Configuration Variables}
+\label{fig:ns2experimentconf}
+\end{figure}
+
+Each variable was specified in the simulation generator configuration file as shown in Figure \ref{fig:experimentsimconfig}.  
+
+\begin{figure}[ht]
+\lstset{ frame=single,
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=true }
+\begin{lstlisting}
+[main]
+
+packetsize05 = [300..1000] step 100
+packetsize15 = [300..1000] step 100
+
+interval05 = [0.001..0.100] step 0.002
+interval15 = [0.001..0.100] step 0.002
+\end{lstlisting}
+\caption{Simulation Configuration from the experiment}
+\label{fig:experimentsimconfig}
+\end{figure}
+
+The experiment simulations created $117,649$  simulations.  The simulations where submitted to 
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
