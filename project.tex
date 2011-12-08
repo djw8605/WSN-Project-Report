@@ -368,7 +368,7 @@ dweitzel@cse.unl.edu }
 \IEEEauthorblockN{Ayan Sengupta}
 \IEEEauthorblockA{Computer Science \& Engineering\\
 University of Nebraska -- Lincoln \\
-uam111@gmail.com}
+asengupta@cse.unl.edu}
 }
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -435,7 +435,45 @@ As Moore's Law decreases the prices of sensor networks, it is becoming necessary
 
 
 \section{Introduction}
-Wireless Sensor networks are considered to be the most promising field of research which fascinates with its potential applications in varied fields, like environmental monitoring, data collection, human activity monitoring, battlefield surveillance etc. One of the prime things to be considered about the wireless sensor networks is that the individual devices or nodes are inherently resource constrained. The nodes are having limited processing speed, storage capacity and communication bandwidth, but these nodes aggregated in a network gives a substantial computational capability. Mostly the wireless sensor networks are fit for those applications where the network should operate for long periods of time but with limited or almost no human intervention. Keeping that in mind, it is understood that wireless sensor networks have severe energy constaints, which is why one of the key characteristics of WSNs are the duty cycling approach of their operation. To minimize energy consumption, most of the device’s components, including the radio, will likely be turned off most of the time. Because they are so closely coupled to a changing physical world, the nodes forming the network will experience wide variations in connectivity and will be subject to potentially harsh environmental conditions. Their dense deployment generally means that there will be a high degree of interaction between nodes, both positive and negative. Each of these factors further complicates the networking protocols. Another very important factor in effective operation of Wireless Sensor networks is the synchronization of the nodes. As the nodes are operated in a very low duty cycle (~1\%) it is very essential for getting the nodes active in critical points of time to sense the environment and also to send and receive required packets effectively. Thus it can be inferred the effective performance of the wireless sensor network depends a lot on various parameters, like, energy availability, amount of duty cycling,  wireless link quality between two nodes, synchronization of the nodes, packet delivery rate, size of the packet transmitted, the MAC protocols used etc.The effect of varying these parameters over a wide range of values are not studied that much because physically these networks can be operated on a very small number of parameters varying only over a small range. Therefore in spite of a lot of potential applications, the wide use of wireless networks is still to come because the characterization of the networks in different applications and contexts are not being done extensively and that is the motivation of this project. Given a WSN w and it operates on set of x parameters {p1, p2, …… px} with each of the parameters varying within the range {Rp11, Rp12 , …., Rp1n.} considering parameter p1, w can be operated on any one of xn configurations, statistical analysis of the network response over the entire range is necessary to quantify the characteristics of the WSN but real experiments are mostly possible for parameters varying over only a small part of the entire range. In this project we make use of the distributed supercomputing facility to study the characteristics of simulated wireless sensor network over exponential number of combinations of different configuration of parameters..
+Wireless Sensor Networks (WSN), with applications in environmental monitoring, data collection, human activity monitoring, battlefield surveillance, has become a dominant research area in computer science.  
+Wireless sensor networks are traditionally defined by their resource constraints.
+The nodes have limited processing capacity, storage and communication bandwidth.  
+WSNs combine the power of multiple nodes to create substantial computational capability aggregated from the network. 
+
+Wireless sensor networks are used for applications that require the network to operate for long periods of time with limited or no human intervention. 
+Due to severe energy constraints inherit in autonomous operation, most wireless sensor nodes maintain a low duty cycle.
+To minimize energy consumption, most of the device’s components, including the radio, processor, and sensors, will be turned off most of the time.
+
+Because they are so closely coupled to a changing physical world, the nodes forming the network will experience wide variations in connectivity.  Additionally, the node could be subject to potentially harsh environmental conditions. 
+WSNs are typically densely deployment, therefore due to the range of low power radios, will cause the nodes to communicate with more nodes than a sparse deployment.
+
+Additionally time synchronization of WSN nodes is especially important in low duty cycle networks for accurate sensing, reporting, and low power communication.  The network can synchronize wake up times so that nodes will not have to idle wait to communicate with other nodes.
+
+\begin{samepage}
+Thus it can be inferred the effective performance of the wireless sensor network depends on various parameters:
+\begin{itemize}
+\item Energy Availability
+\item Duty Cycle
+\item Wireless link quality between nodes
+\item Synchronization of the network
+\item Packet delivery rate
+\item Packet sizes
+\item MAC protocols used
+\end{itemize}
+\end{samepage}
+
+The effect of varying these parameters over a wide range of values is not well studied because the parameters can be constrained on the physical networks for specific applications.
+Therefore in spite of a lot of potential applications, we feel the wide use of wireless networks is still to come because the customization of the networks in different applications and environments cause protocols to be created for each application.
+
+Given a WSN $w$, it operates on set of $n$ parameters $\{p_1, p_2, \ldots, p_n\}$.  Each parameter has it's own unique range.  Then there are multiple instances of the network, each with it's own unique parameter set, $s$.  Therefore, the number of parameter sets, $|s|$, can be represented by Equation \ref{eqn:parametersets}
+\begin{equation}
+\label{eqn:parametersets}
+\prod_{i=1}^{n} p_i \times \left\lceil \frac{r_i}{t_i} \right\rceil
+\end{equation}
+Where $r_i$ is the range of potential values for parameter $p_i$.  The step increment for the discrete values of parameter $p_i$ is represented by $t_i$.
+
+Statistical analysis of the network response over all potential parameter sets is necessary to quantify the characteristics of the WSN.  Physical experiments are possible for parameters only varying over only a small part of the entire range. 
+In this project we make use of the distributed supercomputing facility to study the characteristics of simulated wireless sensor network over exponential number of combinations of different configuration of parameters.
 
 \section{Related Work}
 Many parallel network simulators have been created.  The majority of which can be split into two categories, parallel network simulators and distributed sequential network simulators.  Parallel network simulators are those usually created specific to a task and run on a parallel cluster, utilizing parallel libraries.  In contrast, distributed sequential network simulators run a multiple independent instances of independent simulators.  
@@ -446,7 +484,7 @@ The simulations in this project are of an entire environment, therefore they are
 
 
 \section{Implementation}
-In order to run multiple simulations, a simulation generator was developed\footnote{Source available at: https://github.com/djw8605/WSNSim}.  The simulation generator creates the simulation configuration for a NS-2 simulation.  Figure \ref{fig:processoverview} shows the workflow that a simulation.  First the user creates a simulation configuration file specifying the parameters for the simulation.  In NS-2, this includes the node configuration and the simulation timeline.  Next the user creates a generator configuration file.  This file specifies the variables and their possible ranges for the simulations.  The user then invokes the generator which will create individual simulation configurations and the job submission files that will be used to execute the simulations.  The job submission files are then submitted to a resource management system which will manage the execution of the simulations.
+In order to run multiple simulations, a simulation generator was developed\footnote{Source available at: https://github.com/djw8605/WSNSim}.  The simulation generator creates the simulation configuration for a NS-2\cite{fall1995network} simulation, though it could be used to create a configuration for any clear text configuration file.  Figure \ref{fig:processoverview} shows the workflow that a simulation.  First the user creates a simulation configuration file specifying the parameters for the simulation.  In NS-2, this includes the node configuration and the simulation timeline.  Next the user creates a generator configuration file.  This file specifies the variables and their possible ranges for the simulations.  The user then invokes the generator which will create individual simulation configurations and the job submission files that will be used to execute the simulations.  The job submission files are then submitted to a resource management system which will manage the execution of the simulations.
 
 The resource management system, in this case Condor \cite{litzkow1988condor}, will deploy the jobs on computational clusters across the Open Science Grid \cite{pordes2007open}, a US national cyberinfrastructure.  After the jobs have completed, the output will be transferred back and can be post processed further.
 
@@ -518,11 +556,13 @@ The executable is a custom shell script distributed with our project.  It will f
 
 \section{Evaluation}
 
-% TODO: talk about the simulation.
-For our evaluation of the design we choose a WSN modified example 
+\subsection{Simulation}
+We designed a simulated Wireless Sensor Network using Network Simulator(NS-2) and Mannasim\cite{braga2004mannasim} patch. NS-2 is a general simulator tool used for simulation of any kind of wired or wireless networks. The wireless sensor networks which we are interested in are implemented using the Mannsim patch. 
+
+In the original simulation configuration, the simulated WSN has nodes with all possible links among themselves excepting for self loops. All the links have 1Mb of bandwidth and the packet size is 500 bytes. Packets are transmitted from Node 1 and Node 2 at an interval of 0.005 units of time and node 20 is the receiver of the routed packets. In order to replicate the real WSN scenario the link between some pairs of nodes are turned off, being restored after 1 min in simulation time. 
 
 \subsection{Experimental Design}
-The modified simulation file had 4 variables that where replaced using the simulation generator.  The variables in the NS-2 configuration where specified with the special qualifier specified in the Section \label{sec:jobgeneration}.  A snippet of the NS-2 configuration file showing two of the variables replaces is shown in Figure \ref{fig:ns2experimentconf}.
+The original simulation configuration was modified such that 4 variables where replaced and iterated using the simulation generator.  The variables in the NS-2 configuration where specified with the special qualifier specified in the Section \label{sec:jobgeneration}.  A snippet of the NS-2 configuration file showing two of the variables replaces is shown in Figure \ref{fig:ns2experimentconf}.
 
 \begin{figure}[ht]
 \lstset{ frame=single,
@@ -668,10 +708,10 @@ In this project, we created a framework that manages the simulations of complex 
 
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
+%\section*{Acknowledgment}
 
 
-The authors would like to thank...
+%The authors would like to thank...
 
 
 
