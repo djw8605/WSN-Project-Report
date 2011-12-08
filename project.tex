@@ -407,7 +407,7 @@ uam111@gmail.com}
 
 \begin{abstract}
 %\boldmath
-The 
+As Moore's Law decreases the prices of sensor networks, it is becoming necessary to test new network configurations on larger and larger scales.  Rapid development and evaluation of network configuration requires simulation of a environment.  The simulation time of a environment scales with the number of nodes, and the complexity of the network configuration.  In this project, we attempt to alleviate the time spent simulating these complex networks by creating a framework that will generate simulation configurations with varying parameters.  Additionally, the framework creates submission files that can be used to submit the simulations to a resource manager for processing on a computational cluster or grid.
 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
@@ -445,6 +445,10 @@ I wish you the best of success.
 
 \section{Related Work}
 Many parallel network simulators have been created.  The majority of which can be split into two categories, parallel network simulators and distributed sequential network simulators.  Parallel network simulators are those usually created specific to a task and run on a parallel cluster, utilizing parallel libraries.  In contrast, distributed sequential network simulators run a multiple independent instances of independent simulators.  
+
+The parallel network simulators described in \cite{fujimoto2003large} distribute a single simulation with a single global state.  The global state necessitates creating infrastructure to distribute and maintain this global state, such as RTI-Kit \cite{fujimoto2000design}.  Implementations with the RTI-Kit include federated simulations \cite{riley2004federated}, where the simulation is split into subproblems, each handled by a different instance of the simulator.  Global state is transferred using RTI message passing.  
+
+The simulations in this project are of an entire environment, therefore they are completely independent of other simulations.
 
 
 \section{Implementation}
